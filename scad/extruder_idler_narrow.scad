@@ -1,0 +1,15 @@
+difference()
+{
+    intersection()
+{
+    import("../stl/extruder-direct-drive.stl");
+    translate([-255,175,0])cube([25,55,45]);
+}
+translate([-250.1,195,18])cube([3,15,15]);
+}
+translate([.1,0,-.1])
+intersection()
+{
+    translate([-249,199,18])rotate(45,[0,1,0])cube([4,8,4]);
+    translate([-250.1,195,18])cube([3,15,15]);
+}
