@@ -82,9 +82,42 @@ module arm()
         translate([0,-slotlength/2,0])rotate(90,[0,1,0])cylinder(r=m3_slot/2,h=wall_thick*2,center=true);
     }
 }
+module assembled()
+{
 translate([0,(fansize/2+hingeknee),0])
 rotate(-kneeangle,[1,0,0])translate([-(arm_gap+wall_thick/2),(slotlength/2),0])arm();
 translate([-(arm_gap+wall_thick/2),fansize/2+hingeknee-ep,0])hinge();
 translate([-(wall_thick/2+hingegap/2),fansize/2+hingeknee-ep,0])hinge();
 translate([(wall_thick/2+hingegap/2),fansize/2+hingeknee-ep,0])hinge();
 fanholder();
+}
+module split()
+{
+    union()
+    {
+        translate([-(slotlength/2+arm_gap-ep),(slotlength+fansize/2+hingeknee+bracket_h/2),0])cube([slotlength,slotlength*2,slotlength*2],center=true);
+        translate([-(slotlength/2+arm_gap-ep),(slotlength+fansize/2+hingeknee+bracket_h/2-bracket_h),-(slotlength+arm_h/2+ep)])cube([slotlength,slotlength*2,slotlength*2],center=true);
+        translate([-(slotlength/2+arm_gap-ep+wall_thick/2),(slotlength+fansize/2+hingeknee-bracket_h/2),0])cube([slotlength,slotlength*2,slotlength*2],center=true);
+    }
+}
+//split into two parts
+//part a
+module subA()
+{
+    intersection()
+    {
+        split();
+        assembled();
+    }
+}
+module subB()
+{
+    difference()
+    {
+        assembled();
+        split();
+        
+    }
+}
+subB();
+//subA();
