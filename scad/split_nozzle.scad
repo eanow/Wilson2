@@ -17,11 +17,11 @@ arm_h=8;//how tall arm should be
 ep=0.001; //small value, used to nudge and eliminate abiguity on faces touching
 module extruder()
 {
-    import("extruder_main.stl");
+    import("../stl/extruder_main.stl");
 }
 module hotend()
 {
-    import("e3dmockup.stl");
+    import("../stl/e3dmockup.stl");
 }
 module fansquare()
 {
@@ -229,6 +229,6 @@ subA();
 translate([-15,64.5,-20])rotate(90,[1,0,0])rotate(90,[0,1,0])extruder();
 translate([0,22,-16])rotate(270,[0,0,1])rotate(90,[1,0,0])hotend();
 }
-assembly();
-rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])nozzle();
-//nozzle();
+//assembly();
+//rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])nozzle();
+nozzle();
