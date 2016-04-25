@@ -24,7 +24,7 @@ tensioner();
 translate([0,0,0])slice();
 //translate([34.5/2,0,0])cube([34.5,9,18],center=true);
 */
-//tensioner();
+tensioner();
 
 $fs=.5;
 $fa=1;
@@ -38,6 +38,8 @@ translate([shaft_l/2,0,0])cube([shaft_l,shaft_w,shaft_h],center=true);
 yoke_w=15;
 yoke_r=2.5;
 yoke_l=18.75;
+inside_w=10;
+m4slot=4.5;
 module round()
 {
     translate([0,0,-shaft_h/2])linear_extrude(height=shaft_h)intersection()
@@ -50,4 +52,13 @@ module round()
         translate([shaft_l+yoke_l/2-ep,0])square([yoke_l+ep,yoke_w+ep],center=true);
     }
 }
-round();
+module yoke()
+{
+    difference()
+    {
+        round();
+        xbump=(yoke_w-inside_w)/2;
+        translate([yoke_l/2+shaft_l+xbump,0,0])cube([yoke_l,inside_w,shaft_h*2],center=true);
+    }
+}
+yoke();
