@@ -1,30 +1,4 @@
-module tensioner()
-{
-    translate([1000-14.4,-200-.75,-8])import("../stl/x-tensioner.stl");
-}
-/*
-z_h=18.8;
-module slice()
-{
-    translate([0,0,0])intersection()
-    {
-        tensioner();
-        translate([0,0,5.5])cube([150,150,.5],center=true);
-    }
-}
-module slice2()
-{
-    translate([0,0,0])intersection()
-    {
-        tensioner();
-        translate([0,0,5.5])cube([80,80,.5],center=true);
-    }
-}
-tensioner();
-translate([0,0,0])slice();
-//translate([34.5/2,0,0])cube([34.5,9,18],center=true);
-*/
-//tensioner();
+
 
 $fs=.5;
 $fa=1;
@@ -33,9 +7,9 @@ shaft_l=32;
 //shaft_h=12; //original rice design size
 shaft_h=20;
 shaft_w=9;
-yoke_w=15;
+yoke_w=16;
 yoke_r=2.5;
-yoke_l=18.75;
+yoke_l=19.75;
 inside_w=10;
 m4slot=4.5;
 m3slot=3.5;
@@ -43,8 +17,8 @@ m3screw_l=18.5;
 belt_r=12.75;
 belt_x=13.75;
 f_ring_r=4.8;
-m3nut_r=5/2;
-m3nut_t=2.5;
+m3nut_r=6.6/2;
+m3nut_t=3;
 //shaft
 module shaft()
 {
@@ -100,15 +74,17 @@ module complete()
     {
         shaftyoke();
         //captive nuts
-        slot_d=m3nut_r*sqrt(3);
-        translate([3,0,shaft_h/2-1.5-slot_d/2])
+        slot_d=m3nut_r*sqrt(3); 
+        //fudge=slot_d-(5*sqrt(3)/2); //take this out later
+        //+fudge
+        translate([3.5,0,shaft_h/2-1.5-slot_d/2])
         {
             rotate([90,0,90])cylinder(r=m3nut_r,h=m3nut_t,$fn=6,center=true);
             translate([0,shaft_w/2,0])cube([m3nut_t,shaft_w,slot_d],center=true);
             
         }
         translate([m3screw_l/2-ep,0,shaft_h/2-1.5-slot_d/2])rotate([90,0,90])cylinder(r=m3slot/2,h=m3screw_l+3,center=true);
-        translate([3,0,-(shaft_h/2-1.5-slot_d/2)])
+        translate([3.5,0,-(shaft_h/2-1.5-slot_d/2)])
         {
             rotate([90,0,90])cylinder(r=m3nut_r,h=m3nut_t,$fn=6,center=true);
             translate([0,shaft_w/2,0])cube([m3nut_t,shaft_w,slot_d],center=true);
@@ -121,5 +97,5 @@ module complete()
     }
     
 }
-//complete();
+complete();
     

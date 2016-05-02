@@ -143,8 +143,8 @@ module tension_hole()
     slot_d=m3nut_r*sqrt(3);
     translate([0,tens_y+shaft_w/2,0])rotate([0,270,0])
     {
-    translate([m3screw_l/2-ep,0,shaft_h/2-1.5-slot_d/2])rotate([90,0,90])cylinder(r=m3slot/2,h=m3screw_l+3,center=true);
-    translate([m3screw_l/2-ep,0,-(shaft_h/2-1.5-slot_d/2)])rotate([90,0,90])cylinder(r=m3slot/2,h=m3screw_l+3,center=true);
+    translate([m3screw_l/2-ep,0,shaft_h/2-1.5-slot_d/2])rotate([90,0,90])cylinder(r=m3slot/2+.3,h=m3screw_l+3,center=true);
+    translate([m3screw_l/2-ep,0,-(shaft_h/2-1.5-slot_d/2)])rotate([90,0,90])cylinder(r=m3slot/2+.3,h=m3screw_l+3,center=true);
     }
 }
 
@@ -207,4 +207,4 @@ module final()
 //base();
 //filled();
 final();
-//translate([0,tens_y+shaft_w/2,tens_plate])rotate([0,270,0])complete();
+translate([0,tens_y+shaft_w/2,tens_plate])rotate([0,270,0])complete();
