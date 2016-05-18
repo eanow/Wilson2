@@ -279,7 +279,7 @@ module holder()
     difference()
     {
         cube([post_x+12.4,post_y+4.8,2],center=true);
-        cube([post_x+.4,post_y+.4,3],center=true);
+        cube([post_x+1.2,post_y+1.2,3],center=true);
         translate([post_x/2+3.2,0,0])cylinder(r=m3slot/2,h=3,center=true,$fn=16);
         translate([-(post_x/2+3.2),10,0])cylinder(r=m3slot/2,h=3,center=true,$fn=16);
         translate([-(post_x/2+3.2),-10,0])cylinder(r=m3slot/2,h=3,center=true,$fn=16);

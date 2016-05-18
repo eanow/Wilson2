@@ -132,10 +132,10 @@ k1gap=36; //shift at first knee
 k2gap=45;
 k3gap=42;
 k3down=3; //shift the end down a bit
-shell_t=.6;
+shell_t=1;
 duct0h=24;
 duct1h=10;
-duct2h=26;
+duct2h=24;
 duct0r=36/2;
 duct1r=28/2;
 duct2r=18/2;
@@ -215,8 +215,9 @@ module nozzle()
         translate([0,0,+ep])duct3(shell_t);
         translate([0,0,-ep])duct3(shell_t);
         //air slots
-        translate([17,-10,48])rotate(kneeangle,[1,0,0])cube([5,4,15],center=true);
-        translate([-17,-10,48])rotate(kneeangle,[1,0,0])cube([5,4,15],center=true);
+        //added in extra translate
+        translate([17,-10,48])rotate(kneeangle,[1,0,0])translate([0,1,-2])cube([6,4,15],center=true);
+        translate([-17,-10,48])rotate(kneeangle,[1,0,0])translate([0,1,-2])cube([6,4,15],center=true);
     }
 }
 module assembly()
