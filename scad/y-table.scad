@@ -278,7 +278,7 @@ module holder()
 {
     difference()
     {
-        cube([post_x+12.4,post_y+4.8,2],center=true);
+        cube([post_x+13.4,post_y+5.8,2],center=true);
         cube([post_x+1.2,post_y+1.2,3],center=true);
         translate([post_x/2+3.2,0,0])cylinder(r=m3slot/2,h=3,center=true,$fn=16);
         translate([-(post_x/2+3.2),10,0])cylinder(r=m3slot/2,h=3,center=true,$fn=16);
@@ -286,7 +286,7 @@ module holder()
     }
 }
 //translate([-post_nudge,(slider_gap/2+slider_l/2-4),post_z])
-translate([0,115,0])rotate([0,0,90])holder();
+translate([0,115,1])rotate([0,0,90])holder();
 holder_bracket();
 complete();
 //post();
