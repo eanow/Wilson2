@@ -199,7 +199,8 @@ module switchgap()
     x_bump1=motor_w/2+m_buttress_t+s_width/2-s_wall;
     translate([-(x_bump1),y_bump-s_wall/6-ep,s_thick/2+rod_plate/2+ep])cube([s_width-(s_wall*2),s_length-s_wall/3,s_thick-rod_plate],center=true);
     translate([-(x_bump1),y_bump+ep,s_thick/2+base_t/2+ep])cube([s_width-(s_wall*2),s_length,s_thick-base_t],center=true);
-    translate([-(x_bump1),y_bump-1,s_thick])rotate([90,0,0])cylinder(r=(s_width-(s_wall*2))/2,h=s_length,center=true);
+    side=(s_width-(s_wall*2))/sqrt(2);
+    translate([-(x_bump1),y_bump-1,s_thick])rotate([90,0,0])rotate([0,0,45])cube([side,side,s_length],center=true);
     //screw slots, placed manually
     translate([-(x_bump1),y_bump+7.15,s_thick-5.5])cube([s_width*2,2.4,4],center=true);
     translate([-(x_bump1),y_bump+10+7.15,s_thick-5.5])cube([s_width*2,2.4,4],center=true);
