@@ -11,7 +11,7 @@ mount_gap=23;
 mount_nudge=3;
 bearing_wall=2.3;
 bearing_diameter = 19;   // 19=LM10UU 15=LM8UU
-bearing_cut_extra = 0.12; // extra cut for linear bearings so they are not too tight.
+bearing_cut_extra = 0.12; //0.4;// extra cut for linear bearings so they are not too tight.
 bearing_h=29;
 rod_gap=50;
 bearing_inset=4.8;
