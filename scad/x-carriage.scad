@@ -43,10 +43,10 @@ module bearing_cut()
 }
 module strain_cut()
 {
-    translate([plate_h/2-rod_gap/2,-5-bearing_diameter/2,carriage_w/2])rotate([0,0,0])cube([8+20,15-4,carriage_w+6],center=true);
-    //translate([plate_h/2-rod_gap/2,-5-bearing_diameter/2,carriage_w/2])rotate([0,0,-50])cube([8+5,15+5,carriage_w+6],center=true);
-    translate([plate_h/2+rod_gap/2,-5-bearing_diameter/2,carriage_w/2])rotate([0,0,-50])cube([8+5,15+5,carriage_w+6],center=true);
-    //translate([plate_h/2+rod_gap/2,-5-bearing_diameter/2,carriage_w/2])rotate([0,0,50])cube([8+5,15+5,carriage_w+6],center=true);
+    translate([plate_h/2-rod_gap/2,-5-bearing_diameter/2,carriage_w/2])rotate([0,0,20])cube([8,15,carriage_w+6],center=true);
+    translate([plate_h/2-rod_gap/2,-5-bearing_diameter/2,carriage_w/2])rotate([0,0,-20])cube([8,15,carriage_w+6],center=true);
+    translate([plate_h/2+rod_gap/2,-5-bearing_diameter/2,carriage_w/2])rotate([0,0,-20])cube([8,15,carriage_w+6],center=true);
+    translate([plate_h/2+rod_gap/2,-5-bearing_diameter/2,carriage_w/2])rotate([0,0,20])cube([8,15,carriage_w+6],center=true);
 }
 module base_plate()
 {
@@ -66,7 +66,7 @@ module solids()
 }
 module belt_slot()
 {
-    bg_w=center_w-1+5;
+    bg_w=center_w-1;
     bt_h=11.5;
     bt_w=23;
     bt_t=center_w+1;
@@ -107,12 +107,7 @@ difference()
     mount_holes();
     strain_cut();
     belt_slot();
-    translate([-2,(plate_t+.01),3])rotate([90,0,0])zip_slot();
-    translate([bearing_diameter+6.01,(plate_t+.01),3])rotate([90,0,0])mirror([1,0,0])zip_slot();
 }
-translate([plate_h/2-4.7,plate_t,5])rotate([90,0,0])belt_tie();
-translate([plate_h/2-4.7,plate_t,carriage_w-5])rotate([90,0,0])belt_tie();
-
 module belt_tie()
 {
     difference()
@@ -140,23 +135,7 @@ module belt_tie()
         translate([-10.8,0,tie_h+.05])rotate([0,45,0])cube([10,11,10],center=true);
     }
 }
-
+translate([plate_h/2-4.7,plate_t,5])rotate([90,0,0])belt_tie();
+translate([plate_h/2-4.7,plate_t,carriage_w-5])rotate([90,0,0])belt_tie();
 //belt_tie();
-zip_w=7;
-zip_t=2.5;
-module zip_slot()
-{
-    intersection()
-    {
-        cube([bearing_diameter,zip_w,zip_t]);
-        translate([zip_w/2,zip_w/2,zip_w/2])rotate([0,45,0])cube([bearing_diameter,zip_w,zip_t],center=true);
-    }
-    intersection()
-    {
-        cube([zip_t,zip_w,bearing_diameter]);
-        translate([zip_w/2,zip_w/2,zip_w/2])rotate([0,45,0])cube([bearing_diameter,zip_w,zip_t],center=true);
-    }
-    translate([zip_w*.8,0,0])cube([bearing_diameter-zip_w,zip_w,zip_t]);
-    translate([0,0,zip_w*.8])cube([zip_t,zip_w,bearing_diameter]);
-    translate([zip_w/2,zip_w/2,zip_w/2])rotate([0,45,0])cube([bearing_diameter*.3,zip_w,zip_t],center=true);
-}
+
