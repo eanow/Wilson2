@@ -74,20 +74,20 @@ module complete()
     {
         shaftyoke();
         //captive nuts
-        slot_d=m3nut_r*sqrt(3); 
+        slot_d=(5/2)*sqrt(3); 
         //fudge=slot_d-(5*sqrt(3)/2); //take this out later
         //+fudge
         translate([3.5,0,shaft_h/2-1.5-slot_d/2])
         {
             rotate([90,0,90])cylinder(r=m3nut_r,h=m3nut_t,$fn=6,center=true);
-            translate([0,shaft_w/2,0])cube([m3nut_t,shaft_w,slot_d],center=true);
+            translate([0,shaft_w/2,0])cube([m3nut_t,shaft_w,sqrt(3)*6.6/2],center=true);
             
         }
         translate([m3screw_l/2-ep,0,shaft_h/2-1.5-slot_d/2])rotate([90,0,90])cylinder(r=m3slot/2,h=m3screw_l+3,center=true);
         translate([3.5,0,-(shaft_h/2-1.5-slot_d/2)])
         {
             rotate([90,0,90])cylinder(r=m3nut_r,h=m3nut_t,$fn=6,center=true);
-            translate([0,shaft_w/2,0])cube([m3nut_t,shaft_w,slot_d],center=true);
+            translate([0,shaft_w/2,0])cube([m3nut_t,shaft_w,sqrt(3)*6.6/2],center=true);
         }
         translate([m3screw_l/2-ep,0,-(shaft_h/2-1.5-slot_d/2)])rotate([90,0,90])cylinder(r=m3slot/2,h=m3screw_l+3,center=true);
         translate([30,5+shaft_w/2-ep,-39])rotate(45,[0,1,0])cube([50,10,50],center=true);

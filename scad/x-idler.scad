@@ -88,8 +88,8 @@ module x_end_holes(){
                    #rotate([0,0,270]) translate(v=[8,0,0]) cylinder(h=12,r=1.8,$fn=20,center=true);
            }
  //twin tensioner holes
- m3nut_r=5/2;
- slot_d=m3nut_r*sqrt(3);
+ m3nut_r=6.6/2;
+ slot_d=(5/2)*sqrt(3);
  m3slot=3.5;
  shaft_h=20;
 translate(v=[-5.5-11+1.5,10,30])
@@ -164,7 +164,7 @@ module x_end_motor_sr() {
 // Make parts
 x_end_idler();
 use<x-tensioner.scad>
-//translate([-5.5-9.5,0,30])rotate([0,0,90])complete();
+translate([-5.5-9.5,0,30])rotate([0,0,90])complete();
 
 
 
