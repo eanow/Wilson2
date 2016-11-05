@@ -1,0 +1,82 @@
+//translate([0,-12,0])import("../stl/pica-mount.stl");
+plate_thick=3.5;
+plate_l=70;
+plate_w=79;
+post_h=16;
+cut_out_r=2.66;
+$fa=.5;
+$fs=.5;
+module base_plate()
+{
+    translate([plate_l/2,-plate_w/2,plate_thick/2])cube([plate_l,plate_w,plate_thick],center=true);
+    translate([plate_l/2-1.25,-64.25,plate_thick/2])cube([plate_l+8.5,18,plate_thick],center=true);
+    //ridge
+    translate([.8,-64.25,0])cylinder(r=cut_out_r+3,h=plate_thick+.7,$fn=40);
+    translate([.8-3.15,-64.25,.5*(plate_thick+.7)])cube([6.3,cut_out_r*2+6,plate_thick+.7],center=true);
+    translate([plate_l-(0.15+3.15),-64.25,0])cylinder(r=cut_out_r+3,h=plate_thick+.7,$fn=40);
+    translate([plate_l-(0.15),-64.25,.5*(plate_thick+.7)])cube([6.3,cut_out_r*2+6,plate_thick+.7],center=true);
+    
+}
+module screw_cut()
+{
+    translate([.8,-64.25,-1])cylinder(r=cut_out_r,h=3+plate_thick+.7,$fn=40);
+    translate([plate_l-(0.15+3.15),-64.25,-1])cylinder(r=cut_out_r,h=3+plate_thick+.7,$fn=40);
+    translate([plate_l-(0.15),-64.25,.5*(plate_thick+.7)-1])cube([6.3+.1,cut_out_r*2,3+plate_thick+.7],center=true);
+    translate([.8-3.15,-64.25,.5*(plate_thick+.7)-1])cube([6.3+.1,cut_out_r*2,3+plate_thick+.7],center=true);
+    //posts
+    rr=3.5/2;
+    translate([20-20,0,0])
+    {
+    translate([25,-12,-1])cylinder(r=rr,h=post_h+2);
+    translate([25,-12-52,-1])cylinder(r=rr,h=post_h+2);
+    }
+    translate([25,-64-10,plate_thick/4-.01])translate()cube([rr*2,20,plate_thick/2],center=true);
+}
+module mount_post()
+{
+    rr1=6;
+    rr2=3.5;
+    translate([20,0,0])
+    {
+    translate([25,-12,0])cylinder(r1=rr1,r2=rr2,h=post_h);
+    translate([25,-12-52,0])cylinder(r1=rr1,r2=rr2,h=post_h);
+    }
+}
+module final()
+{
+    difference()
+    {
+        union()
+        {
+            base_plate();
+            translate([-20,0,0])
+            {
+            mount_post();
+            translate([55,-73.5,plate_thick-.05])scale([1,.75,1])rotate([0,0,90])spine();
+            }
+        }
+        screw_cut();
+    }
+}
+final();
+module spine()
+{
+    translate([10,0,0])
+    {
+    difference()
+    {
+        cube([71,20,5]);
+        translate([0,-13.5,2-.1])spine_cut();
+        translate([0,13.5,2-.1])spine_cut(); 
+    }
+}
+}
+module spine_cut()
+{
+    minkowski()
+    {
+        cube([100,20,5]);
+        sphere(r=2);
+    }
+}
+//spine();
