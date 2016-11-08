@@ -31,15 +31,15 @@ module screw_cut()
     translate([.8-3.15,-64.25,.5*(plate_thick+.7)-1])cube([6.3+.1,cut_out_r*2,3+plate_thick+.7],center=true);
     //posts
     rr=3.5/2;
-    translate([10-20,0,0])
+    translate([10-20,7,0])
     {
     translate([25,-22,-1])cylinder(r=rr,h=post_h+2);
     translate([25,-22-49,-1])cylinder(r=rr,h=post_h+2);
     translate([25+58,-22-49,-1])cylinder(r=rr,h=post_h+2);
     translate([25+58,-22,-1])cylinder(r=rr,h=post_h+2);
     }
-    translate([25-10,-22-49-10,plate_thick/4-.01])translate()cube([rr*2,20,plate_thick/2],center=true);
-    translate([25-10+58,-22-49-10,plate_thick/4-.01])translate()cube([rr*2,20,plate_thick/2],center=true);
+    translate([25-10,-22-49-10+7,plate_thick/4-.01])translate()cube([rr*2,20,plate_thick/2],center=true);
+    translate([25-10+58,-22-49-10+7,plate_thick/4-.01])translate()cube([rr*2,20,plate_thick/2],center=true);
 }
 module mount_post()
 {
@@ -64,7 +64,7 @@ module fan()
 }
 module tie_cut()
 {
-    translate([10-20,0,0])
+    translate([10-20,7,0])
     {
     translate([25,-15,0])cube([8,2,20],center=true);
     translate([83,-15,0])cube([8,2,20],center=true);
@@ -77,8 +77,9 @@ module final()
         union()
         {
             base_plate();
-            translate([-20,0,0])
-            {mount_post();
+            translate([-20,7,0])
+            {
+            mount_post();
             translate([25,-32.5,plate_thick-.05])scale([.8,1,1])spine();
             translate([25,-81.5,plate_thick-.05])scale([.8,1,1])spine();
             translate([75,-77.5,plate_thick-.05])rotate([0,0,93])scale([.7,1,1])spine();

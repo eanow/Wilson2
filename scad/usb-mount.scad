@@ -4,6 +4,10 @@ plate_l=70;
 plate_w=79;
 post_h=16;
 cut_out_r=2.66;
+holder_y=38;
+holder_x=19.25;
+holder_w=10;
+pcb_t=1.8;
 $fa=.5;
 $fs=.5;
 module base_plate()
@@ -42,6 +46,28 @@ module mount_post()
     translate([25,-12-52,0])cylinder(r1=rr1,r2=rr2,h=post_h);
     }
 }
+module tie_cut()
+{
+    translate([10-20,7,0])
+    {
+    translate([20,-15,0])cube([8,2,20],center=true);
+    translate([20,-33,0])cube([8,2,20],center=true);
+    }
+    translate([25,-5,0])cube([8,2,20],center=true);
+    //translate([25,-71,0])cube([8,2,20],center=true);
+}
+module wigglestop()
+{
+    hh=post_h+pcb_t+4;
+    xx=25-holder_x;
+    translate([xx,-holder_y,hh/2])difference()
+    {
+        cube([6,holder_w,hh],center=true);
+        translate([3,0,pcb_t/2-hh/2+post_h])cube([6,holder_w*2,pcb_t],center=true);
+        translate([3,0,6/sqrt(2)-2.5])translate([0,0,pcb_t/2-hh/2+post_h])rotate([0,-30,0])cube([6,holder_w*2,pcb_t],center=true);
+        translate([2+3-.25,0,6/sqrt(2)-1.9])translate([0,0,pcb_t/2-hh/2+post_h])rotate([0,-30,0])cube([6,holder_w*2,pcb_t],center=true);
+    }
+}
 module final()
 {
     difference()
@@ -54,8 +80,10 @@ module final()
             mount_post();
             translate([55,-73.5,plate_thick-.05])scale([1,.75,1])rotate([0,0,90])spine();
             }
+            wigglestop();
         }
         screw_cut();
+        tie_cut();
     }
 }
 final();
