@@ -1,8 +1,3 @@
-module mimic()
-{
-    translate([-320,-126,0])import("../stl/y-motor.stl");
-}
-
 ext_gap=155.3; //distance, center to center, of 2020 extrusions
 rod_gap=170; //distance, center to center, of 10mm rods
 ext_y=30.64; //distance, floor to center of extrusions
@@ -175,7 +170,7 @@ module motorblock()
         }
     }
 }
-s_width=12.7;
+s_width=13.7;
 s_thick=23.3;
 s_length=42.4;
 s_wall=3.2;
@@ -208,6 +203,7 @@ module switchgap()
 module zipslot()
 {
     translate([-39,16,10+(2.5/2)])cube([5,10,2.5],center=true);
+    translate([39,16,10+(2.5/2)])cube([5,10,2.5],center=true);
 }
 
 module filled()

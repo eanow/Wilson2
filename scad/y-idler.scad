@@ -1,8 +1,3 @@
-module mimic()
-{
-    translate([-320,-126,0])import("../stl/y-idler.stl");
-}
-//mimic();
 include<y-tensioner.scad>
 ext_gap=155.3; //distance, center to center, of 2020 extrusions
 rod_gap=170; //distance, center to center, of 10mm rods
@@ -207,4 +202,4 @@ module final()
 //base();
 //filled();
 final();
-translate([0,tens_y+shaft_w/2,tens_plate])rotate([0,270,0])complete();
+//translate([0,tens_y+shaft_w/2,tens_plate])rotate([0,270,0])complete();

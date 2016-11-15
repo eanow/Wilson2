@@ -164,7 +164,7 @@ module adjustomatic() { // small holder for a M3 screw pointing down toward the 
 
        translate(v=[-(15+17/2+adj_block_x/2),offs_adjuster_y,height-adj_block_z/2+14]) 
            {
-         rotate([0,0,30]) #cylinder(h = 4, r = 7.5/2 , $fn = 6);
+         rotate([0,0,30]) #cylinder(h = 4, r = 7/2 , $fn = 6);
          translate([0,0,-20]) #cylinder(h=30,r=2,$fn=16);
 }
 
