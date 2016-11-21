@@ -17,11 +17,19 @@ arm_h=8;//how tall arm should be
 ep=0.001; //small value, used to nudge and eliminate abiguity on faces touching
 module extruder()
 {
-    import("../stl/extruder_main.stl");
+    translate([-15,64.5,-20])rotate(90,[1,0,0])rotate(90,[0,1,0])import("../stl/extruder_main.stl");
+}
+module titan_extruder()
+{
+    translate([27.1,37.5,-23])rotate([0,0,90])import("../stl/titan_dummy.stl");
+}
+module x_carriage()
+{
+    translate([34.5,65.5,39.5])rotate([0,0,180])rotate([0,90,0])import("../stl/x-carriage.stl");
 }
 module hotend()
 {
-    import("../stl/e3dmockup.stl");
+    translate([0,22,-16])rotate(270,[0,0,1])rotate(90,[1,0,0])import("../stl/e3dmockup.stl");
 }
 module fansquare()
 {
@@ -227,9 +235,17 @@ rotate(kneeangle,[1,0,0])translate([0,-(fansize/2+hingeknee),0])
 subB();
 subA();
 }
-translate([-15,64.5,-20])rotate(90,[1,0,0])rotate(90,[0,1,0])extruder();
-translate([0,22,-16])rotate(270,[0,0,1])rotate(90,[1,0,0])hotend();
+extruder();
+hotend();
+x_carriage();
 }
-//assembly();
-//rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])nozzle();
-nozzle();
+module titan_assembly()
+{
+    titan_extruder();
+    hotend();
+    x_carriage();
+}
+//titan_assembly();
+assembly();
+rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])nozzle();
+//nozzle();
