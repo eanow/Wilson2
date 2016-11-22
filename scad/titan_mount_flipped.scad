@@ -30,9 +30,9 @@ module nozzle()
     bracket_h=8;
     translate([39.5,38-22])rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])import("../stl/split_nozzle.stl");
 }
-titan_assembly();
+//titan_assembly();
 motor_mount();
-fan_bracket();
+//fan_bracket();
 module motor_mount()
 {
     translate([25,26.3,13.5])
