@@ -31,8 +31,8 @@ module nozzle()
     translate([39.5,38-22])rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])import("../stl/split_nozzle.stl");
 }
 //titan_assembly();
-motor_mount();
-//fan_bracket();
+//motor_mount();
+fan_bracket();
 module motor_mount()
 {
     translate([25,26.3,13.5])
@@ -41,7 +41,7 @@ module motor_mount()
         //connections
         difference()
         {
-            translate([0,42.3/2+3.5-1.6,0])cube([2,8,42.3],center=true);           
+            translate([0,42.3/2+3.5-1.6,0])cube([2,8,42.3+1],center=true);           
         }
     }
     translate([-18,54.3,-22])carriage_plate();
@@ -101,21 +101,21 @@ module carriage_plate()
 {
     m4_nut_thick=4.2; //how thick an m4 nut is
     m4_r=4.5/2;
-    m4_nut_r=7.8/2;
+    m4_nut_r=8.8/2;
     carriage_wall_thick=2.5; //thickness of plate against x carriage
     bolt_gap=23;
     difference()
     {
         union()
         {
-            translate([8,-1,7])cube([36,carriage_wall_thick+m4_nut_thick,49.65]);
+            translate([8,-1,7])cube([36,carriage_wall_thick+m4_nut_thick,49.65+.5]);
                //strength triangles 
-            translate([0,0,49.65+7-.01])linear_extrude(height=1.2)hull()
+            translate([0,0,49.65+7-.01+.5])linear_extrude(height=2.4)hull()
             {
                 translate([8,-1])square([36,carriage_wall_thick+m4_nut_thick]);
                 translate([8+36-.5,-40-1])square([.5,40]);
             }
-            translate([0,0,13.15+.01])linear_extrude(height=1.2)hull()
+            translate([0,0,13.15+.01-1.2-.5])linear_extrude(height=2.4)hull()
             {
                 translate([8,-1])square([36,carriage_wall_thick+m4_nut_thick]);
                 translate([8+36-.5,-40-1])square([.5,40]);
@@ -150,7 +150,7 @@ module nema_plate()
     thickness = 2; // [1,1.5,2,2.5,3,3.5,4,5,6,7]
 
     // Overall width of motor
-    nema_width = 42.3;
+    nema_width = 42.3+1;
 
     // Spacing between M3 holes
     nema_hole_spacing = 31;

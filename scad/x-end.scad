@@ -159,13 +159,13 @@ module adjustomatic() { // small holder for a M3 screw pointing down toward the 
        translate(v=[-(15+17/2+adj_block_x/2)-5,offs_adjuster_y,height-adj_block_z/2-8]) 
          rotate([0,-30,0]) cube(size=[adj_block_x,adj_block_y+2,adj_block_z],center=true);
 
-       translate(v=[-(15+17/2+adj_block_x/2-1),offs_adjuster_y,height-adj_block_z/2-3]) 
+       translate(v=[-(15+17/2+adj_block_x/2-1),offs_adjuster_y,height-adj_block_z/2-3-5]) 
           cube(size=[adj_block_x,adj_block_y-2,adj_block_z-2],center=true);
 
        translate(v=[-(15+17/2+adj_block_x/2),offs_adjuster_y,height-adj_block_z/2+14]) 
            {
-         rotate([0,0,30]) #cylinder(h = 4, r = 7/2 , $fn = 6);
-         translate([0,0,-20]) #cylinder(h=30,r=2,$fn=16);
+         rotate([0,0,30]) cylinder(h = 4, r = 6.6/2 , $fn = 6);
+         translate([0,0,-20]) cylinder(h=30,r=3.5/2,$fn=16);
 }
 
    }
