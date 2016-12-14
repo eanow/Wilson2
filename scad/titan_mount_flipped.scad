@@ -2,17 +2,17 @@ module titan_assembly()
 {
     titan_extruder();
     hotend();
-    translate([0,.5,0])x_carriage();
+    //translate([0,.5,0])x_carriage();
     nozzle();
     motor_dummy();
 }
 module motor_dummy()
 {
-    translate([5,26.3,13.5])color([.25,.25,.25])cube([34,42,42],center=true);
+    translate([5-20-.8,26.3,13.5])color([.25,.25,.25])cube([34,42,42],center=true);
 }
 module titan_extruder()
 {
-    translate([12.5,22,-23])rotate([0,0,270])import("../stl/titan_dummy.stl");
+    translate([12.5-20,22,-23])rotate([0,0,270])import("../stl/titan_dummy.stl");
 }
 module x_carriage()
 {
@@ -20,7 +20,7 @@ module x_carriage()
 }
 module hotend()
 {
-    translate([39.5,38,-16])rotate(270,[0,0,1])rotate(90,[1,0,0])import("../stl/e3dmockup.stl");
+    translate([39.5-20,38,-16])rotate(270,[0,0,1])rotate(90,[1,0,0])import("../stl/e3dmockup.stl");
 }
 module nozzle()
 {
@@ -28,14 +28,14 @@ module nozzle()
     fansize=40;
     hingeknee=12; //distance from edge of fanholder to pivor point
     bracket_h=8;
-    translate([39.5,38-22])rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])import("../stl/split_nozzle.stl");
+    translate([39.5-20,38-22])rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])import("../stl/split_nozzle.stl");
 }
-//titan_assembly();
-//motor_mount();
+titan_assembly();
+motor_mount();
 fan_bracket();
 module motor_mount()
 {
-    translate([25,26.3,13.5])
+    translate([25-20,26.3,13.5])
     {
         rotate([0,90,0])nema_plate();
         //connections
@@ -52,7 +52,7 @@ module fan_bracket()
     holespace=32;
     round_r=4;
     m3_slot=3.5;
-    translate([39.5,16,0])rotate([45,0,0])translate([0,-32,-4])linear_extrude(height=7)difference()
+    translate([39.5-20,16,0])rotate([45,0,0])translate([0,-32,-4])linear_extrude(height=7)difference()
     {
         minkowski()
         {
@@ -69,8 +69,8 @@ module fan_bracket()
         circle(r=36/2,$fn=60);
     }
     
-    fan_arm();
-    translate([29,0,0])fan_arm();
+    translate([-20-.4,0,0])fan_arm();
+    translate([29-20+.4,0,0])fan_arm();
 }
 module fan_arm()
 {
@@ -83,7 +83,7 @@ module fan_arm()
             translate([25-2,26.3,13.5])
             {
                 rotate([0,90,0])nema_plate();
-                translate([0,-15.9,-22])rotate([0,90,0])cube([10,10,2],center=true);
+                translate([0,-15.9,-22])rotate([0,90,0])cube([10,10,2.4],center=true);
             }
             translate([39.5,16,0])
             {
@@ -94,7 +94,7 @@ module fan_arm()
                 cube([100,30,100],center=true);
             }
         }
-        translate([39.5,16,0])rotate([45,0,0])translate([0,-32,-5])linear_extrude(height=17)translate([-.5*holespace,.5*holespace])circle(r=m3_slot/2,$fn=30);
+        translate([39.5,16,0])rotate([45,0,0])translate([0,-32,-5])linear_extrude(height=17)translate([-.5*holespace,.5*holespace])circle(r=m3_slot/2+.5,$fn=30);
     }
 }
 module carriage_plate()
@@ -108,7 +108,7 @@ module carriage_plate()
     {
         union()
         {
-            translate([8,-1,7])cube([36,carriage_wall_thick+m4_nut_thick,49.65+.5]);
+            translate([8-10,-1,7])cube([36+10,carriage_wall_thick+m4_nut_thick,49.65+.5]);
                //strength triangles 
             translate([0,0,49.65+7-.01+.5])linear_extrude(height=2.4)hull()
             {
@@ -147,7 +147,7 @@ module nema_plate()
     // Customisable E3D Titan Motor Spacer Plate
 
     // Thickness of spacer plate
-    thickness = 2; // [1,1.5,2,2.5,3,3.5,4,5,6,7]
+    thickness = 2.4; // [1,1.5,2,2.5,3,3.5,4,5,6,7]
 
     // Overall width of motor
     nema_width = 42.3+1;
