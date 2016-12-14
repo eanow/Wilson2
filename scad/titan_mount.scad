@@ -1,3 +1,4 @@
+//mockup parts
 module titan_assembly()
 {
     titan_extruder();
@@ -11,15 +12,13 @@ module titan_extruder()
 }
 module x_carriage()
 {
-    translate([34.5,65.5+1,39.5])rotate([0,0,180])rotate([0,90,0])import("../stl/x-carriage.stl");
+    //lowered hot end 6 mm
+    translate([34.5,65.5+1+.5,39.5+6])rotate([0,0,180])rotate([0,90,0])import("../stl/x-carriage.stl");
 }
+//this hotend and fan positioning should match how the MjRice extruder holds them
 module hotend()
 {
     translate([0,22,-16])rotate(270,[0,0,1])rotate(90,[1,0,0])import("../stl/e3dmockup.stl");
-}
-module motor_dummy()
-{
-    translate([33-.8+2.4,26.3+6.85,13.5])color([.25,.25,.25])cube([34,42,42],center=true);
 }
 module nozzle()
 {
@@ -29,139 +28,165 @@ module nozzle()
     bracket_h=8;
     rotate(-(180-kneeangle),[1,0,0])translate([0,(fansize/2+hingeknee),bracket_h/2])import("../stl/split_nozzle.stl");
 }
-//titan_assembly();
-motor_mount();
+//block approximately the size of a NEMA 17 motor that I'll be using
+module motor_dummy()
+{
+    translate([33-.8+2.4,26.3+6.85-1,13.5])color([.25,.25,.25])cube([34,43.2,43.2],center=true);
+}
+module mount_stl()
+{
+    #translate([8,61,9])rotate([90,0,0])import("../stl/titan_mount.stl");
+}
+titan_assembly();
+//motor_mount();
 //motor_dummy();
+mount_stl();
 //fan_bracket();
-m4_nut_thick=3.2; //how thick an m4 nut is
-carriage_wall_thick=2.5; //thickness of plate against x carriage
-
+//physical sizing
+carriage_wall_thick=2.5+4.2; //thickness of plate against x carriage
+carriage_mount_spacing=23; //center to center spacing of the carriage connectors
+// Spacing between M3 holes on nema
+nema_hole_spacing = 31;
+// Clearance hole for motor boss
+nema_boss_size = 27;
+m3_slot=3.5; //width of a hole for M3 screw
+mount_wall_thick=2.4; //vertical mount walls thickness
+m4_nut_thick=4.2; //depth of recess for m4 nut
+m4_slot=4.5; //hole for M4 screw
+m4_nut_r=8.8/2;
+//motor size
+nema17_w=43.2+.1; //tolerance
+//mounting plate sizing
+xxmount=44; //area around mount holes
+yymount=38;
+yymotor=nema17_w+mount_wall_thick*2;//area around motor
+xxmotor=25;
+motor_nudge=8; //adjustment of motor position, right to left
+ep=0.01;
+//tweak position of mount relative to mounting holes
+xnudge=5;
+ynudge=-0.5;
+rounder=3;
 module motor_mount()
 {
-    translate([25-10.2-.3-.5,26.3+6.85,13.5])
+    difference()
     {
-        rotate([0,90,0])nema_plate();
-        //connections
-        difference()
+        intersection()
         {
-            translate([0,42.3/2+3.5-1.6,0])cube([2.4,8,42.3+1],center=true);           
+            carriage_plate();
+            //smooth out
+            translate([xnudge,ynudge,0])linear_extrude(height=carriage_wall_thick+nema17_w)carriage_shape();
+            translate([0,ynudge-yymount/2+nema17_w/2+mount_wall_thick,-ep+nema17_w/2+carriage_wall_thick])rotate([0,90,0])translate([0,0,-xxmount])linear_extrude(height=xxmount*2)union()
+            {
+                yy=nema17_w+mount_wall_thick*2;
+                minkowski()
+                {
+                    
+                    square([nema17_w-rounder*2,yy-rounder*2],center=true);
+                    circle(r=rounder,$fn=50);
+                }
+                //want the bottom to be non-rounded
+                translate([nema17_w/4+carriage_wall_thick,0])square([nema17_w/2,yy],center=true);
+            }
+        }
+        for (aa=[-.5:1:.5])
+        {
+            for (bb=[-.5:1:.5])
+            {
+                //m4 holes
+                translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,-ep])cylinder(r=m4_slot/2,h=ep*2+carriage_wall_thick,$fn=50);
+                //m4 nuts
+                translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,carriage_wall_thick-m4_nut_thick-ep])cylinder(r=m4_nut_r,h=ep*2+m4_nut_thick,$fn=6);
+                //m4 nut access
+                translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,carriage_wall_thick-ep])cylinder(r1=m4_nut_r,r2=2.5,h=ep*2+m4_nut_thick,$fn=6);
+            }
         }
     }
-    translate([-18,54.3+1,-22])carriage_plate();
 }
-
+//%translate([-18+1+.5,-5-11.5,2.5+4.2+.3])import("../stl/E3D_Titan_Holder.stl");
 module carriage_plate()
 {
-    m4_nut_thick=4.2; //how thick an m4 nut is
-    m4_r=4.5/2;
-    m4_nut_r=8.8/2;
-    carriage_wall_thick=2.5; //thickness of plate against x carriage
-    bolt_gap=23;
+
+    //part against the carriage
+    translate([xnudge,ynudge,0])linear_extrude(height=carriage_wall_thick)carriage_shape();
+    //vertical part
+    //line up with bottom edge, sink ep down for unambiguity
+    translate([motor_nudge,ynudge-yymount/2+nema17_w/2+mount_wall_thick,-ep])
+    {
+        translate([0,0,nema17_w/2+carriage_wall_thick])
+        {
+            rotate([0,90,0])translate([0,0,-mount_wall_thick])
+            {
+                linear_extrude(height=mount_wall_thick)nema_shape();
+            }
+        }
+    }
+    //strength triangles
+    xx=(xxmount/2+xnudge-motor_nudge+mount_wall_thick);
+    zz=nema17_w;
+    hull()
+    {
+        translate([xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2,carriage_wall_thick/2])cube([xx,mount_wall_thick,carriage_wall_thick],center=true);
+        translate([-mount_wall_thick/2+motor_nudge,-yymount/2+ynudge+mount_wall_thick/2,zz/2+carriage_wall_thick-ep])cube([mount_wall_thick,mount_wall_thick,zz],center=true);
+    }
+
+    hull()
+    {
+        translate([xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2+nema17_w+mount_wall_thick,carriage_wall_thick/2])cube([xx,mount_wall_thick,carriage_wall_thick],center=true);
+        translate([-mount_wall_thick/2+motor_nudge,-yymount/2+ynudge+mount_wall_thick/2+nema17_w+mount_wall_thick,zz/2+carriage_wall_thick-ep])cube([mount_wall_thick,mount_wall_thick,zz],center=true);
+    }
+    
+    hull()
+    {
+        translate([-xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2,carriage_wall_thick/2])cube([xx,mount_wall_thick,carriage_wall_thick],center=true);
+        translate([-mount_wall_thick/2+motor_nudge,-yymount/2+ynudge+mount_wall_thick/2,zz/4+carriage_wall_thick-ep])cube([mount_wall_thick,mount_wall_thick,zz/2],center=true);
+    }
+}
+module nema_shape()
+{
+    rounder=3;
+    yy=nema17_w+mount_wall_thick*2;
     difference()
     {
         union()
         {
-            translate([8-2+.05,-1,7])cube([6+39.9,carriage_wall_thick+m4_nut_thick,49.65+.5]);
-               //strength triangles 
-            
-            translate([-1.2,0,13.15+.01-1.2-.5])linear_extrude(height=2.4)hull()
+            minkowski()
             {
-                translate([22-2+.1,-1])square([14-.1,carriage_wall_thick+m4_nut_thick]);
-                translate([36-4,-40-1+2])square([2.4,38]);
+                square([nema17_w-rounder*2,yy-rounder*2],center=true);
+                circle(r=rounder,$fn=50);
             }
-            translate([-1.2,0,42+2.4+1+13.15+.01-1.2-.5])linear_extrude(height=2.4)hull()
-            {
-                translate([12+22-2+.1,-1])square([15.15+6-.1,carriage_wall_thick+m4_nut_thick]);
-                translate([36-4,-40-1+2])square([2.4,38]);
-            }
-            translate([-1.2,0,13.15+.01-1.2-.5])linear_extrude(height=2.4)hull()
-            {
-                translate([12+22-2+.1,-1])square([15.15+6-.1,carriage_wall_thick+m4_nut_thick]);
-                translate([36-4,-40-1+2])square([2.4,38]);
-            }
-                
+            //want the bottom to be non-rounded
+            translate([nema17_w/4,0])square([nema17_w/2,yy],center=true);
         }
-        
-        //bolt holes
+        //m3 holes
         for (aa=[-.5:1:.5])
         {
-            for(bb=[-.5:1:.5])
+            for (bb=[-.5:1:.5])
             {
-                translate([26+aa*bolt_gap,5,25+bb*bolt_gap])rotate([90,0,0])cylinder(r=m4_r,h=12,$fn=30,center=true);
-                translate([26+aa*bolt_gap,-1+m4_nut_thick/2-.01-m4_nut_thick*.75,25+bb*bolt_gap])rotate([90,0,0])cylinder(r=m4_nut_r,h=m4_nut_thick*2.5,$fn=6,center=true);
+                translate([aa*nema_hole_spacing,bb*nema_hole_spacing])circle(r=m3_slot/2,$fn=50);
             }
-        }/*
-        //access slots
-        translate([11,m4_nut_thick/2-1-0.01,13.5])cube([10,m4_nut_thick,m4_nut_r*sqrt(3)],center=true);
-        translate([42,m4_nut_thick/2-1-0.01,13.5])cube([10,m4_nut_thick,m4_nut_r*sqrt(3)],center=true);
-        translate([0,0,23])
-        {
-            translate([11,m4_nut_thick/2-1-0.01,13.5])cube([10,m4_nut_thick,m4_nut_r*sqrt(3)],center=true);
-            translate([42,m4_nut_thick/2-1-0.01,13.5])cube([10,m4_nut_thick,m4_nut_r*sqrt(3)],center=true);
-        }*/
+        }
+        //motor boss
+        circle(r=nema_boss_size/2,$fn=100);
     }
-
-
-    //
 }
-
-module nema_plate()
+module carriage_shape()
 {
-    // Customisable E3D Titan Motor Spacer Plate
+    rounder=3;
 
-    // Thickness of spacer plate
-    thickness = 2.4; // [1,1.5,2,2.5,3,3.5,4,5,6,7]
-
-    // Overall width of motor
-    nema_width = 42.3+1;
-
-    // Spacing between M3 holes
-    nema_hole_spacing = 31;
-
-    // Clearance hole size for M3
-    nema_hole_size = 3.5;
-
-    // Clearance hole for motor boss
-    nema_boss_size = 27;
-
-
-    chamfer = (nema_width - 34)/2;
-    H = pow(2 * pow(nema_width/2,2), 1/2);
-    h = chamfer * pow(2, 1/2) / 2;
-    x = (H - h) * 2;
-
-
-    difference(){
+    //basic shape-squarish around the mounting holes with extra height for motor
+    minkowski()
+    {
         union()
         {
-        intersection(){
-            cube(size = [nema_width, nema_width, thickness], center = true);
-
-            rotate([0,0,45]) cube(size = [x, x, thickness], center = true);
+            square([xxmount-rounder*2,yymount-rounder*2],center=true);
+            //line up on the bottom right corner
+            translate([(xxmount-xxmotor)/2,(yymotor-yymount)/2])square([xxmotor-rounder*2,yymotor-rounder*2],center=true);
         }
-        difference()
-        {
-            cube(size = [nema_width, nema_width, thickness], center = true);
-            translate([0,-10,0])cube(size = [nema_width+1, nema_width+1, thickness+1], center = true);
-        }
-    }
-
-        for (x = [-0.5:1:0.5])
-        for (y = [-0.5:1:0.5])
-        translate([x * nema_hole_spacing, 
-                   y * nema_hole_spacing, 
-                   0])
-            cylinder(h = thickness * 2, 
-                     r = nema_hole_size / 2, 
-                     center = true,
-                     $fn=150);
-        cylinder(h = thickness * 2,
-                 r = nema_boss_size / 2, 
-                 center = true,
-                 $fn = 250);
-            
+        circle(r=rounder,$fn=50);
     }
 }
+
 
 module fan_bracket()
 {
