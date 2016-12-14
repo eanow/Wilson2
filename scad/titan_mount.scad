@@ -37,10 +37,10 @@ module mount_stl()
 {
     #translate([8,61,9])rotate([90,0,0])import("../stl/titan_mount.stl");
 }
-titan_assembly();
-//motor_mount();
+//titan_assembly();
+motor_mount();
 //motor_dummy();
-mount_stl();
+//mount_stl();
 //fan_bracket();
 //physical sizing
 carriage_wall_thick=2.5+4.2; //thickness of plate against x carriage
@@ -99,16 +99,26 @@ module motor_mount()
                 translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,carriage_wall_thick-m4_nut_thick-ep])cylinder(r=m4_nut_r,h=ep*2+m4_nut_thick,$fn=6);
                 //m4 nut access
                 translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,carriage_wall_thick-ep])cylinder(r1=m4_nut_r,r2=2.5,h=ep*2+m4_nut_thick,$fn=6);
+                //chamfer
+                translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,-ep])cylinder(r1=.5+m4_slot/2,r2=m4_slot/2,h=ep*2+.5,$fn=50);
             }
         }
     }
 }
-//%translate([-18+1+.5,-5-11.5,2.5+4.2+.3])import("../stl/E3D_Titan_Holder.stl");
+//carriage_plate();
 module carriage_plate()
 {
-
     //part against the carriage
-    translate([xnudge,ynudge,0])linear_extrude(height=carriage_wall_thick)carriage_shape();
+    translate([xnudge,ynudge,0])hull()
+    {
+        translate([0,0,.5])linear_extrude(height=carriage_wall_thick-.5)carriage_shape_a(0);
+        linear_extrude(height=carriage_wall_thick)carriage_shape_a(.5);
+    }
+    translate([xnudge,ynudge,0])hull()
+    {
+        translate([0,0,.5])linear_extrude(height=carriage_wall_thick-.5)carriage_shape_b(0);
+        linear_extrude(height=carriage_wall_thick)carriage_shape_b(.5);
+    }
     //vertical part
     //line up with bottom edge, sink ep down for unambiguity
     translate([motor_nudge,ynudge-yymount/2+nema17_w/2+mount_wall_thick,-ep])
@@ -126,19 +136,19 @@ module carriage_plate()
     zz=nema17_w;
     hull()
     {
-        translate([xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2,carriage_wall_thick/2])cube([xx,mount_wall_thick,carriage_wall_thick],center=true);
+        translate([xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2,carriage_wall_thick*.75])cube([xx,mount_wall_thick,carriage_wall_thick*.5],center=true);
         translate([-mount_wall_thick/2+motor_nudge,-yymount/2+ynudge+mount_wall_thick/2,zz/2+carriage_wall_thick-ep])cube([mount_wall_thick,mount_wall_thick,zz],center=true);
     }
 
     hull()
     {
-        translate([xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2+nema17_w+mount_wall_thick,carriage_wall_thick/2])cube([xx,mount_wall_thick,carriage_wall_thick],center=true);
+        translate([xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2+nema17_w+mount_wall_thick,carriage_wall_thick*.75])cube([xx,mount_wall_thick,carriage_wall_thick*.5],center=true);
         translate([-mount_wall_thick/2+motor_nudge,-yymount/2+ynudge+mount_wall_thick/2+nema17_w+mount_wall_thick,zz/2+carriage_wall_thick-ep])cube([mount_wall_thick,mount_wall_thick,zz],center=true);
     }
     
     hull()
     {
-        translate([-xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2,carriage_wall_thick/2])cube([xx,mount_wall_thick,carriage_wall_thick],center=true);
+        translate([-xx/2+motor_nudge-mount_wall_thick,-yymount/2+ynudge+mount_wall_thick/2,carriage_wall_thick*.75])cube([xx,mount_wall_thick,carriage_wall_thick*.5],center=true);
         translate([-mount_wall_thick/2+motor_nudge,-yymount/2+ynudge+mount_wall_thick/2,zz/4+carriage_wall_thick-ep])cube([mount_wall_thick,mount_wall_thick,zz/2],center=true);
     }
 }
@@ -170,21 +180,30 @@ module nema_shape()
         circle(r=nema_boss_size/2,$fn=100);
     }
 }
-module carriage_shape()
+module carriage_shape_a(inset)
 {
-    rounder=3;
-
     //basic shape-squarish around the mounting holes with extra height for motor
     minkowski()
     {
-        union()
-        {
-            square([xxmount-rounder*2,yymount-rounder*2],center=true);
+        square([xxmount-rounder*2-inset,yymount-rounder*2-inset],center=true);
             //line up on the bottom right corner
-            translate([(xxmount-xxmotor)/2,(yymotor-yymount)/2])square([xxmotor-rounder*2,yymotor-rounder*2],center=true);
-        }
         circle(r=rounder,$fn=50);
     }
+}
+module carriage_shape_b(inset)
+{
+    //basic shape-squarish around the mounting holes with extra height for motor
+    minkowski()
+    {
+            //line up on the bottom right corner
+        translate([(xxmount-xxmotor)/2,(yymotor-yymount)/2])square([xxmotor-rounder*2-inset,yymotor-rounder*2-inset],center=true);
+        circle(r=rounder,$fn=50);
+    }
+}
+module carriage_shape()
+{
+    carriage_shape_a(0);
+    carriage_shape_b(0);
 }
 
 
