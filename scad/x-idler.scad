@@ -50,7 +50,14 @@ module x_end_base(){
   translate(v=[-3.5,-22,4]) cube(size=[7.8,20,8],center=true);
 
   translate(v=[5.5,-24,4]) cylinder(h=8,r=12.5,$fn=50,center=true);
-              
+   // post for actuating z rack
+z_post_h = 14;
+  translate(v=[-14,-27.5,height+z_post_h/2]) { 
+  difference() {
+    cube(size=[15,10,z_post_h],center=true);
+    //rotate([90,0,0]) cylinder(h=20,r=m3_hole_r,$fn=50,center=true);
+  }
+}  
 
 }
 
