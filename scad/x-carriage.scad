@@ -42,7 +42,7 @@ spring_mount_h=2.75;
 sm_pos=14.7;
 sm_offset=-1.6;
 cable_w=5; //cable channel width
-cable_h=4;
+cable_h=2;
 module rack_cage()
 {
     translate([-rack_cage_h/2+ep+5,plate_t-rack_cage_w/2,rack_cage_l/2])cube([rack_cage_h+10,rack_cage_w,rack_cage_l],center=true);
@@ -58,7 +58,7 @@ module rack_cage()
     translate([sm_offset,spring_mount_h/2+plate_t-ep,sm_pos])rotate([90,0,0])cylinder(r1=rr1,r2=rr2,h=spring_mount_h,$fn=50,center=true);
     translate([sm_offset,-spring_mount_h/2-rack_cage_w+plate_t+ep,sm_pos])rotate([-90,0,0])cylinder(r1=rr1,r2=rr2,h=spring_mount_h,$fn=50,center=true);
     //cable management
-    translate([plate_h/4+plate_h/4,.5*(cable_w+1.2)+plate_t,.5*(cable_h+2.4)])cube([plate_h/2,cable_w+1.2,cable_h+2.4],center=true);
+    translate([plate_h/4+plate_h/4,.5*(cable_w)+plate_t,.5*(cable_h)])cube([plate_h/2,cable_w,cable_h],center=true);
 }
 module rack_channel()
 {
@@ -75,19 +75,25 @@ module rack_channel()
         }
     }
     //m3 hole
-    translate([-axle_offset,plate_t-rack_cage_w/2,axle_pos])rotate([90,0,0])cylinder(r=m3_slot/2,h=rack_cage_w*2,center=true,$fn=50);
+    translate([-axle_offset,plate_t-rack_cage_w/2,axle_pos])rotate([90,0,0])cylinder(r=m3_slot/2-.05,h=rack_cage_w*2,center=true,$fn=50);
     //hex slot
     translate([-axle_offset,-rack_cage_w+m3_nut_t/2+plate_t-ep,axle_pos])rotate([90,0,0])rotate([0,0,30])cylinder(r=m3_nut_r,h=m3_nut_t,center=true,$fn=6);
     //head slot
     translate([-axle_offset,-m3_head_t/2+plate_t+ep,axle_pos])rotate([90,0,0])rotate([0,0,30])cylinder(r=m3_head_r,h=m3_head_t,center=true,$fn=50);
     //spring mount hole, needs to be tapped/tight
-    translate([sm_offset,rack_nudge+rack_cage_w/2+.8,sm_pos])rotate([90,0,0])cylinder(r=m3_slot/2-.25,h=rack_cage_w,$fn=50,center=true);
-    translate([sm_offset,rack_nudge-rack_cage_w/2-rack_w-.8,sm_pos])rotate([90,0,0])cylinder(r=m3_slot/2-.25,h=rack_cage_w,$fn=50,center=true);
+    translate([sm_offset,rack_nudge+rack_cage_w/2+.8,sm_pos])rotate([90,0,0])cylinder(r=m3_slot/2-.35,h=rack_cage_w,$fn=50,center=true);
+    translate([sm_offset,rack_nudge-rack_cage_w/2-rack_w-.8,sm_pos])rotate([90,0,0])cylinder(r=m3_slot/2-.35,h=rack_cage_w,$fn=50,center=true);
     //cable management
-    translate([plate_h/4+plate_h/4,.5*(cable_w)+plate_t,.5*(cable_h+2.4)])cube([plate_h/2+1,cable_w,cable_h],center=true);
+
     //annulus
     //placed manually
     translate([-rack_cage_h-2.2,plate_t,8])rotate([0,-20,0])difference()
+    {
+        cylinder(r=4,h=3,center=true);
+        cylinder(r=2.5,h=4,center=true);
+    }
+    //placed manually
+    #translate([plate_h/4+plate_h/4,.5*(cable_w+2.5+cable_w*.5)+plate_t,cable_h])rotate([0,-90,0])difference()
     {
         cylinder(r=4,h=3,center=true);
         cylinder(r=2.5,h=4,center=true);
@@ -136,7 +142,7 @@ module solids()
 {
     base_plate();
     bearing_sleeve();
-    rack_cage();
+    translate([ep,0,0])rack_cage();
 }
 module belt_slot()
 {
@@ -144,14 +150,14 @@ module belt_slot()
     bt_h=12;
     bt_w=23;
     bt_t=center_w+1;
-    translate([-3+plate_h/2,-bg_w/2,carriage_w/2])cube([belt_gap_w,bg_w,carriage_w*2],center=true);
+    translate([0,ep,0])translate([-3+plate_h/2,-bg_w/2,carriage_w/2])cube([belt_gap_w,bg_w,carriage_w*2],center=true);
     difference()
     {
         translate([plate_h/2,-bt_t/2,+bt_h/2-.05])cube([bt_w,bt_t,bt_h],center=true);
         translate([plate_h/2-bt_w/2-.001,0,bt_h])scale([1.01,1,3])intersection()
         {
             rotate([90,0,0])cylinder(r=4,h=center_w-1);
-            translate([+5,-center_w/2,-5])cube([10,center_w,10],center=true);
+            translate([+5,ep*2-center_w/2,-5])cube([10,center_w,10],center=true);
         }
     }
     difference()
@@ -181,11 +187,11 @@ module final()
         }
         mount_holes();
         strain_cut();
-        belt_slot();
-        rack_channel();
+        translate([0,ep,0])belt_slot();
+        translate([ep*2,0,0])rack_channel();
     }
     translate([plate_h/2+4.7,plate_t,5])mirror([1,0,0])rotate([90,0,0])belt_tie();
-translate([plate_h/2+4.7,plate_t,carriage_w-5])mirror([1,0,0])rotate([90,0,0])belt_tie();
+    translate([plate_h/2+4.7,plate_t,carriage_w-5])mirror([1,0,0])rotate([90,0,0])belt_tie();
 }
 
 module belt_tie()

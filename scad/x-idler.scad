@@ -171,7 +171,7 @@ module x_end_motor_sr() {
 // Make parts
 x_end_idler();
 use<x-tensioner.scad>
-translate([-5.5-9.5,0,30])rotate([0,0,90])complete();
+//translate([-5.5-9.5,0,30])rotate([0,0,90])complete();
 
 
 
