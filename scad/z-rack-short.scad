@@ -23,7 +23,7 @@ difference()
     {
         translate([(aa-1)*tooth_pitch,0,-rack_h/2])linear_extrude(height=rack_h*2)tooth();
     }
-
+    translate([0,-(rack_w-tooth_depth),0])rotate([-11,0,0])translate([tooth_start+tooth_count*tooth_pitch/2-tooth_pitch/2,-rack_w/2,-5])cube([tooth_count*tooth_pitch,rack_w*2,10],center=true);
 }
 
 
