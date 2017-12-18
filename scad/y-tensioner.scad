@@ -58,7 +58,8 @@ module shaftyoke()
             shaft();
         }
         translate([shaft_l+belt_x,0,0])rotate(90,[1,0,0])cylinder(r=belt_r,h=inside_w,center=true);
-        translate([shaft_l+belt_x,0,0])rotate(90,[1,0,0])cylinder(r=m4slot/2,h=inside_w*2,center=true);
+        //translate([shaft_l+belt_x,0,0])rotate(90,[1,0,0])cylinder(r=m4slot/2,h=inside_w*2,center=true);
+        translate([shaft_l+belt_x,0,0])rotate(90,[1,0,0])cylinder(r=m3slot/2,h=inside_w*2,center=true);
     }
     //friction rings
     difference()
@@ -95,5 +96,5 @@ module complete()
     }
     
 }
-//complete();
+complete();
     

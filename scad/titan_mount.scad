@@ -37,11 +37,11 @@ module mount_stl()
 {
     #translate([8,61+.5,9])rotate([90,0,0])import("../stl/titan_mount.stl");
 }
-titan_assembly();
-//motor_mount();
+//titan_assembly();
+motor_mount();
 //motor_dummy();
 //mount_stl();
-fan_bracket();
+//fan_bracket();
 //physical sizing
 carriage_wall_thick=2.5+4.2; //thickness of plate against x carriage
 carriage_mount_spacing=23; //center to center spacing of the carriage connectors
@@ -53,7 +53,7 @@ m3_slot=3.5; //width of a hole for M3 screw
 mount_wall_thick=2.4; //vertical mount walls thickness
 m4_nut_thick=4.2; //depth of recess for m4 nut
 m4_slot=4.5; //hole for M4 screw
-m4_nut_r=8.8/2;
+m4_nut_r=8.6/2;
 //motor size
 nema17_w=42.4+.1; //tolerance
 //mounting plate sizing
