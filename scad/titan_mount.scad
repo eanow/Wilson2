@@ -53,7 +53,7 @@ m3_slot=3.5; //width of a hole for M3 screw
 mount_wall_thick=2.4; //vertical mount walls thickness
 m4_nut_thick=4.2; //depth of recess for m4 nut
 m4_slot=4.5; //hole for M4 screw
-m4_nut_r=8.6/2;
+m4_nut_r=8.6/2-.2;
 //motor size
 nema17_w=42.4+.1; //tolerance
 //mounting plate sizing

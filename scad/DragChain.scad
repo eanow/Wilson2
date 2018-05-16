@@ -73,7 +73,31 @@ difference()
     translate([linkWidth/2+.3+offset-29.5,20+screw_spacing/2,bracket_t/2-linkHeight])cylinder(r=m3_slot/2,h=bracket_t*2,center=true);
 }
 }
-mount_plate();
+module mirror_mount_plate()
+{
+    translate([linkWidth/2+.3+offset-29.5-4.8,20+screw_spacing/2,bracket_t/2-linkHeight])clip();
+    difference()
+    {
+        translate([linkWidth,0,-linkHeight])linear_extrude((linkHeight-link_height)/2+2)minkowski()
+        {
+            square([offset+linkWidth/2-15,screw_spacing+25]);
+            circle(r=2);
+        }
+        translate([linkWidth/2+.3+offset,20,-10])cylinder(r=2,h=20,center=true);
+        translate([linkWidth/2+.3+offset,20+screw_spacing,-10])cylinder(r=2,h=20,center=true);
+        translate([linkWidth/2+.3+offset,40,-10])cylinder(r=2,h=20,center=true);
+        translate([linkWidth/2+.3+offset,40+15,-10])cylinder(r=2,h=20,center=true);
+        translate([0,0,-linkHeight+1+2])hull()
+        {
+            translate([linkWidth/2+.3+offset,40,])cylinder(r=2,h=2,center=true);
+            translate([linkWidth/2+.3+offset,40+15,0])cylinder(r=2,h=2,center=true);
+        }
+        translate([0,150,0])scale([1,1.5,1])cylinder(r=50,h=50,center=true);
+        translate([linkWidth/2+.3+offset-29.5-4.8,20+screw_spacing/2,bracket_t/2-linkHeight])cylinder(r=m3_slot/2,h=bracket_t*2,center=true);
+    }
+}
+mirror([1,0,0])mirror_mount_plate();
+//mount_plate();
 module femaleMount ()
 {
 	difference ()
@@ -274,7 +298,7 @@ module femaleEnd (mount=0)
 }
 
 
-
+/*
 rotate ([0, 90, 0])
 {
 	if (part_selection == 1)
@@ -306,4 +330,4 @@ rotate ([0, 90, 0])
 	{
 		echo ("Invalid Part Selection");
 	}
-}
+}*/
