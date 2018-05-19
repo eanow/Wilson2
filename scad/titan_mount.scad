@@ -9,6 +9,7 @@ module titan_assembly()
 module titan_extruder()
 {
     translate([27.1,37.5,-23])rotate([0,0,90])import("../stl/titan_dummy.stl");
+    //translate([13,40.2,-10+.2])rotate([0,0,-90])rotate([-90,0,0])import("../stl/ASM_EX_THUMB_SCREW.stl");
 }
 module x_carriage()
 {
@@ -38,10 +39,10 @@ module mount_stl()
     #translate([8,61+.5,9])rotate([90,0,0])import("../stl/titan_mount.stl");
 }
 //titan_assembly();
-motor_mount();
+//motor_mount();
 //motor_dummy();
 //mount_stl();
-//fan_bracket();
+fan_bracket();
 //physical sizing
 carriage_wall_thick=2.5+4.2; //thickness of plate against x carriage
 carriage_mount_spacing=23; //center to center spacing of the carriage connectors
@@ -67,6 +68,7 @@ ep=0.01;
 xnudge=5;
 ynudge=-0.5;
 rounder=3;
+titan_width=25.4; //tolerance
 module motor_mount()
 {
     difference()
@@ -98,7 +100,7 @@ module motor_mount()
                 //m4 nuts
                 translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,carriage_wall_thick-m4_nut_thick-ep])cylinder(r=m4_nut_r,h=ep*2+m4_nut_thick,$fn=6);
                 //m4 nut access
-                translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,carriage_wall_thick-ep])cylinder(r1=m4_nut_r,r2=2.5,h=ep*2+m4_nut_thick,$fn=6);
+                translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,carriage_wall_thick-ep])cylinder(r1=m4_nut_r,r2=m4_nut_r,h=ep*2+m4_nut_thick,$fn=6);
                 //chamfer
                 translate([aa*carriage_mount_spacing,bb*carriage_mount_spacing,-ep])cylinder(r1=.5+m4_slot/2,r2=m4_slot/2,h=ep*2+.5,$fn=50);
             }
@@ -232,6 +234,48 @@ module nema_shape_fan()
         }
     }
 }
+module nema_shape_fan_alt()
+{
+    rounder=3;
+    yy=nema17_w-1;
+    intersection()
+    {
+        difference()
+        {
+            union()
+            {
+                minkowski()
+                {
+                    square([yy-rounder*2,yy-rounder*2],center=true);
+                    circle(r=rounder,$fn=50);
+                }
+            }
+            //m3 holes
+
+            translate([.5*nema_hole_spacing,.5*nema_hole_spacing])circle(r=m3_slot/2,$fn=50);
+            translate([-.5*nema_hole_spacing-6.4,-.5*nema_hole_spacing+.6])circle(r=m3_slot/2,$fn=50);
+            
+            //
+            //motor boss
+            //circle(r=nema_boss_size/2,$fn=100);
+        }
+        //
+        *union()
+        {
+            hole_diag=nema_hole_spacing*sqrt(2)-nema_boss_size;
+            for (aa=[-.5:1:.5])
+            {
+                for (bb=[-.5:1:.5])
+                {
+                    translate([aa*nema_hole_spacing,bb*nema_hole_spacing])circle(r=hole_diag/2,$fn=50);
+                }
+            }
+            diag=nema17_w*sqrt(2);
+            
+            rotate([0,0,45])translate([0,diag/2])square([diag,diag],center=true);
+        }
+    }
+}
 module carriage_shape_a(inset)
 {
     //basic shape-squarish around the mounting holes with extra height for motor
@@ -283,8 +327,8 @@ module fan_bracket()
     }
     //%cube([mount_wall_thick,60,60],center=true);
     
-    titan_width=25.35+.1; //tolerance
-    fan_arm();
+    
+    fan_arm_alt();
 }
 module fan_arm()
 {
@@ -294,7 +338,7 @@ module fan_arm()
         union()
         {   
             fan_arm_a();
-            //translate([-titan_width-mount_wall_thick,0,0])fan_arm();
+            
             hull()
             {
                 translate([15,0,0])rotate([45,0,0])translate([0,-32+fansize/2,-4])linear_extrude(height=7)translate([])square([mount_wall_thick,mount_wall_thick/2],center=true);
@@ -320,6 +364,45 @@ module fan_arm()
         }
     }
 }
+module fan_arm_alt()
+{
+    intersection()
+    {
+        rotate([45,0,0])translate([0,0,3.5-4-8])cube([200,200,16+7],center=true);
+        union()
+        {   
+            //moved the backet to the other side of the titan
+            translate([-titan_width-mount_wall_thick,0,0])fan_arm_a();
+            
+            difference()
+            {
+                translate([-titan_width-mount_wall_thick,0,0])hull()
+                {
+                    translate([15,0,0])rotate([45,0,0])translate([0,-32+fansize/2,-4])linear_extrude(height=7)translate([])square([mount_wall_thick,mount_wall_thick/2],center=true);
+                    translate([8,61+.5,9])rotate([90,0,0])translate([motor_nudge,ynudge-yymount/2+nema17_w/2+mount_wall_thick,-ep])
+                    {
+                    translate([0,0,nema17_w/2+carriage_wall_thick])rotate([0,90,0])translate([-18,0,-mount_wall_thick])
+                        {
+                            linear_extrude(height=mount_wall_thick)square([1,nema17_w-1],center=true);
+                        }
+                    }
+                }
+                translate([-titan_width-mount_wall_thick,0,0])translate([8,61+.5,9])rotate([90,0,0])translate([motor_nudge,ynudge-yymount/2+nema17_w/2+mount_wall_thick,-ep])translate([0,0,nema17_w/2+carriage_wall_thick])rotate([0,90,0])translate([0,0,-mount_wall_thick])translate([0,0,-.5])linear_extrude(height=mount_wall_thick+1)translate([-.5*nema_hole_spacing-6.4,-.5*nema_hole_spacing+.6])circle(r=m3_slot/2,$fn=50);
+            }
+        }
+    }
+    //titan position
+    intersection()
+    {
+        rotate([45,0,0])translate([0,0,3.5-4-8])cube([200,200,16+7],center=true);
+        translate([-3,0,0])difference()
+        {
+            rotate([30,0,0])translate([3,-32+fansize/2+15-ep-.6,-4+3.5])cube([24,30,7+5],center=true);
+            translate([0,25+7.5+.25+.01,0])cube([50,50,50],center=true);
+            translate([0,25+7.5+.25+.01-10,33])cube([50,50,50],center=true);
+        }
+    }
+}
 module fan_arm_a()
 {
     translate([8,61+.5,9])rotate([90,0,0])translate([motor_nudge,ynudge-yymount/2+nema17_w/2+mount_wall_thick,-ep])
@@ -328,7 +411,7 @@ module fan_arm_a()
         {
             rotate([0,90,0])translate([0,0,-mount_wall_thick])
             {
-                linear_extrude(height=mount_wall_thick)nema_shape_fan();
+                linear_extrude(height=mount_wall_thick)nema_shape_fan_alt();
             }
         }
     }
